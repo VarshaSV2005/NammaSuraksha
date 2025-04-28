@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat - Crisis Response</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <script src="https://cdn.socket.io/4.4.1/socket.io.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h2>Real-Time Communication</h2>
+        <ul id="messages"></ul>
+        <input id="myMessage" autocomplete="off"><button onclick="sendMessage()">Send</button>
+
+        <script>
+            const socket = io();
+
+            function sendMessage() {
+                const msg = document.getElementById('myMessage').value;
+                socket.emit('message', msg);
+                document.getElementById('myMessage').value = '';
+            }
+
+            socket.on('message', function(msg) {
+                const item = document.createElement('li');
+                item.textContent = msg;
+                document.getElementById('messages').appendChild(item);
+            });
+        </script>
+    </div>
+</body>
+</html>

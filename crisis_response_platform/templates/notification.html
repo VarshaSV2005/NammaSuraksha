@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mass Notifications - Crisis Response Platform</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <script src="https://cdn.socket.io/4.4.1/socket.io.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h2>Mass Notifications</h2>
+        <form method="POST">
+            <textarea name="notification" placeholder="Enter Notification Message" required></textarea><br>
+            <button type="submit">Send Notification</button>
+        </form>
+
+        <h3>City-wide Alerts:</h3>
+        <ul id="alertList">
+            {% for note in notifications %}
+                <li>{{ note['content'] }} ({{ note['timestamp'] }})</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <script>
+        const socket = io();
+
+        socket.on('mass_notification', function(data) {
+            let li = document.createElement('li');
+            li.textContent = data.message + " (" + data.timestamp + ")";
+            document.getElementById('alertList').appendChild(li);
+        });
+    </script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+</body>
+</html>
